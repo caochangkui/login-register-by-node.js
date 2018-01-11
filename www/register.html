@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<style type="text/css">
+    body {
+        margin: 100px;
+    }
+    div {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    .a {
+        text-decoration: none;
+        color: red;
+        font-size: 14px;
+        font-weight: bold;
+    }
+</style>
+<body>
+    <div id="box">
+        <div>
+            用 户 名： <input type="text" id="user">
+        </div>
+        <div>
+            设置密码：<input type="password" class="password">
+        </div>
+        <div>
+            确认密码：<input type="password" class="password">
+        </div>
+        <div>
+            <input type="button" value="注册" id="btn">
+        </div>
+        <div style="font-size: 14px;"> 
+            已有账号？<a href="http://127.0.0.1:8888/login.html" class="a">直接登录</a>
+        </div>   
+    </div>
+
+
+<script type="text/javascript" src="ajax.js"></script>
+<script>
+
+    const box = document.getElementById('box');
+    const user = document.getElementById('user');
+    const password = document.getElementsByClassName('password');
+    const btn = document.getElementById('btn');
+
+    btn.onclick = function(){
+
+        if(user.value.trim() === ''){
+            alert('请输入用户名')
+            return
+        }
+        if(password[0].value.trim().length < 3){
+            alert('密码长度不能小于3位')
+            return
+        }
+        if(password[1].value !== password[0].value){
+            alert('两次密码不一致')
+            return
+        }
+
+        ajax({
+            url:'/register',
+            data:{
+                username: encodeURI(user.value),
+                password: encodeURI(password[0].value)
+            },
+            method:'post',
+            dataType:'json',
+            success:function(data){
+                console.log(data)
+                if(data.code == 3){
+                    // alert('注册成功')
+                    box.innerHTML = '<h2>注册成功</h2><a href="http://127.0.0.1:8888/login.html">点此返回登陆</a>'
+                    
+                }else if(data.code == 2){
+                    alert('用户已存在')
+                }
+                
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
